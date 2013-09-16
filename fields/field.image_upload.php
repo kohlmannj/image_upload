@@ -87,7 +87,7 @@
 			if( !isset($settings['max_height']) ){
 				$settings['max_height'] = 1200;
 			}
-			
+
 			if( !isset($settings['resize']) ){
 				$settings['resize'] = 'yes';
 			}
@@ -127,12 +127,12 @@
 			);
 
 			$wrapper->appendChild($div);
-			
+
 			$div = new XMLElement('div', null, array('class' => 'two columns'));
 
 			$this->_addUniqueCheckbox($div);
 			$this->_addResizeCheckbox($div);
-			
+
 			$wrapper->appendChild($div);
 		}
 
@@ -191,13 +191,13 @@
 
 			$wrapper->appendChild($label);
 		}
-		
+
 		private function _addResizeCheckbox(XMLElement &$wrapper){
 			$label = Widget::Label(null, null, 'column');
 			$input = Widget::Input("fields[{$this->get('sortorder')}][resize]", 'yes', 'checkbox');
 			if( $this->get('resize') == 'yes' ) $input->setAttribute('checked', 'checked');
 			$label->setValue(__('%s Resize image to fit max values', array($input->generate())));
-		
+
 			$wrapper->appendChild($label);
 		}
 
@@ -274,7 +274,7 @@
 						$message .= __('Image must have a minimum height of %1$spx.', array($min_height));
 						$error = self::__ERROR_CUSTOM__;
 					}
-					
+
 					// Check max only if resize is not active
 					if (!$this->isResizeActive()) {
 						// Max width
@@ -283,7 +283,7 @@
 							$message .= __('Image must have a maximum width of %1$spx.', array($max_width));
 							$error = self::__ERROR_CUSTOM__;
 						}
-						
+
 						// Max height
 						if( !empty($max_height) && ($max_height != 0) && ($meta['height'] > $max_height) ) {
 							if (strlen($message) > 0) { $message .= '<br />'; }
@@ -351,13 +351,13 @@
 				if( $this->isResizeActive() ) {
 					$max_width = $this->get('max_width');
 					$max_height = $this->get('max_height');
-	
+
 					if( (!empty($max_width) && ($max_width > 0)) || (!empty($max_height) && ($max_height > 0)) ){
-	
+
 						if( is_file($file = $data['tmp_name']) ){
-	
+
 							$dimensions = $this->figureDimensions(self::getMetaInfo($file, $data['type']));
-	
+
 							if( $dimensions['proceed'] ){
 								if( self::resize($file, $dimensions['width'], $dimensions['height'], $data['type']) ){
 									$data['size'] = filesize($file);
@@ -377,7 +377,7 @@
 		public function displayPublishPanel(XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null) {
 			// Let the upload field do it's job
 			parent::displayPublishPanel($wrapper, $data, $flagWithError, $fieldnamePrefix, $fieldnamePostfix, $entry_id);
-			
+
 			$label = $this->getChildrenWithClass($wrapper, 'file', 'label');
 			if ($label != null) {
 				// try to find the i element
@@ -387,11 +387,11 @@
 					$i = new XMLElement('i');
 					$label->prependChild($i);
 				}
-				
+
 				$i->setValue($i->getValue() . ' ' . $this->generateHelpMessage());
 			}
 		}
-		
+
 		private function generateHelpMessage() {
 			$sizeMessage = '';
 			$sizes = array();
@@ -425,10 +425,10 @@
 				$width = 0;
 				$height = 40;
 			}
-			
+
 			$destination = str_replace('/workspace', '', $this->get('destination')) . '/';
-			
-			$image = '<img style="vertical-align: middle;" src="'.URL.'/image/1/'.$width.'/'.$height.$destination.$file.'" alt="'.$this->get('label').' of Entry '.$entry_id.'"/>';
+
+			$image = $file.'<br/><img style="vertical-align: middle;" src="'.URL.'/image/1/'.$width.'/'.$height.$destination.$file.'" alt="'.$this->get('label').' of Entry '.$entry_id.'"/>';
 
 			if( $link ){
 				$link->setValue($image);
@@ -499,16 +499,16 @@
 			$crop = '150';
 			return preg_replace("/(.*)(\.[^\.]+)/e", "substr('$1', 0, $crop).'-'.time().'$2'", $filename);
 		}
-		
+
 		protected function isResizeActive() {
 			return $this->get('resize') == 'yes';
 		}
-		
+
 		private function getChildrenWithClass(XMLElement &$rootElement, $className, $tagName = NULL) {
 			if ($rootElement == NULL) {
 				return NULL;
 			}
-		
+
 			// contains the right css class and the right node name (if any)
 			// TODO: Use word bondaries instead of strpos
 			if (
@@ -518,17 +518,17 @@
 			) {
 				return $rootElement;
 			}
-		
+
 			// recursive search in child elements
 			foreach ($rootElement->getChildren() as $key => $child) {
-		
+
 				$res = $this->getChildrenWithClass($child, $className, $tagName);
-		
+
 				if ($res != NULL) {
 					return $res;
 				}
 			}
-		
+
 			return NULL;
 		}
 
