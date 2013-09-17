@@ -412,6 +412,18 @@
 		/*------------------------------------------------------------------------------------------------*/
 
 		public function prepareTableValue($data, XMLElement $link = NULL, $entry_id = null){
+			// Get the handle of the section this entry belongs to.
+			$section_handle = Symphony::Database()->fetchCol("handle", sprintf("
+				SELECT
+					`handle`
+				FROM
+					`tbl_sections`
+				WHERE
+					`id` = '%s'
+				LIMIT 1", $this->get("parent_section")
+			))[0];
+
+
 			if( !$file = $data['file'] ){
 				if( $link ) return parent::prepareTableValue(null, $link);
 				else return parent::prepareTableValue(null);
@@ -435,7 +447,12 @@
 				return $link->generate();
 			}
 
-			else{
+			else if ($section_handle != NULL) {
+				$link = Widget::Anchor(is_null($image) ? '' : $image, sprintf('%s/publish/%s/edit/%d/', SYMPHONY_URL, $section_handle, $entry_id));
+				return $link->generate();
+			}
+
+			else {
 				$link = Widget::Anchor($image, URL.$this->get('destination').'/'.$file);
 				return $link->generate();
 			}
